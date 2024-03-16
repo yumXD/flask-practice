@@ -407,3 +407,4 @@ pip-selfcheck.json
 
 migrations/
 *.sqlite
+.idea/

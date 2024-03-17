@@ -1,8 +1,11 @@
 from flask import Flask, render_template
 
+from apps import config
+
 
 def create_app():
     app = Flask(__name__)
+    app.config.from_object(config.BaseConfig)
 
     from apps import views as main_views
 

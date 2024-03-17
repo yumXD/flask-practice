@@ -1,11 +1,16 @@
 from flask import Flask, render_template
+from pymongo import MongoClient
 
-from apps import config
+db = None
 
 
 def create_app():
+    global db  # 전역 변수 사용 선언
     app = Flask(__name__)
-    app.config.from_object(config.BaseConfig)
+    # 환경변수
+    app.config.from_object('apps.config.Config')
+    client = MongoClient(app.config['MONGO_URI'])
+    db = client.dbjungle
 
     from apps import views as main_views
 

@@ -10,29 +10,33 @@ def index():
     return render_template("auth/index.html")
 
 
-@bp.route('/register', methods=['POST'])
+@bp.route('/register', methods=['GET', 'POST'])
 def register_user():
-    username = request.json['username']
-    email = request.json['email']
-    password = request.json['password']
+    if request.method == 'POST':
+        username = request.json['username']
+        email = request.json['email']
+        password = request.json['password']
 
-    existing_user = User.find_by_username(username)
-    if existing_user:
-        return jsonify({'message': 'Username already exists'}), 400
+        existing_user = User.find_by_username(username)
+        if existing_user:
+            return jsonify({'message': 'Username already exists'}), 400
 
-    new_user = User(username=username, email=email, password=password)
-    new_user.save()
+        new_user = User(username=username, email=email, password=password)
+        new_user.save()
 
-    return jsonify({'message': 'User registered successfully'}), 201
+        return jsonify({'message': 'User registered successfully'}), 201
+    return render_template('auth/signup.html')
 
 
-@bp.route('/login', methods=['POST'])
+@bp.route('/login', methods=['GET', 'POST'])
 def login_user():
-    username = request.json['username']
-    password = request.json['password']
+    if request.method == 'POST':
+        username = request.json['username']
+        password = request.json['password']
 
-    user = User.find_by_username(username)
-    if user and user.check_password(password):
-        return jsonify({'message': 'Login successful'}), 200
-    else:
-        return jsonify({'message': 'Invalid username or password'}), 401
+        user = User.find_by_username(username)
+        if user and user.check_password(password):
+            return jsonify({'message': 'Login successful'}), 200
+        else:
+            return jsonify({'message': 'Invalid username or password'}), 401
+    return render_template('auth/login.html')
